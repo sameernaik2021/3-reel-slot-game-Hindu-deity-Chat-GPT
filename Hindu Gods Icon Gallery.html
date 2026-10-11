@@ -1,0 +1,685 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Hindu Gods Icon Gallery</title>
+
+    <style>
+        /* =========================
+           GENERAL STYLING
+        ========================= */
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            background: #fffaf2;
+            color: #333;
+            padding: 40px 20px;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: auto;
+        }
+
+        .section-heading {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .section-heading h1 {
+            font-size: 32px;
+            color: #8b4513;
+            margin-bottom: 12px;
+        }
+
+        .section-heading p {
+            font-size: 15px;
+            color: #777;
+            line-height: 1.7;
+        }
+
+        /* =========================
+           ICON GRID
+        ========================= */
+
+        .gods-grid {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 25px;
+        }
+
+        /* =========================
+           GOD CARD
+        ========================= */
+
+        .god-card {
+            --god-color: #e87519;
+
+            background: #ffffff;
+            border: 1px solid #f0e5d5;
+            border-radius: 18px;
+            padding: 30px 20px;
+            text-align: center;
+            cursor: pointer;
+
+            transition:
+                transform 0.3s ease,
+                box-shadow 0.3s ease,
+                border-color 0.3s ease;
+        }
+
+        .god-card:hover {
+            transform: translateY(-6px);
+            border-color: var(--god-color);
+
+            box-shadow:
+                0 12px 30px rgba(90, 50, 10, 0.10);
+        }
+
+        /* =========================
+           SVG ICON CONTAINER
+        ========================= */
+
+        .god-icon {
+            width: 100px;
+            height: 100px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            margin: 0 auto 20px;
+
+            border-radius: 50%;
+            background: color-mix(
+                in srgb,
+                var(--god-color) 10%,
+                white
+            );
+
+            color: var(--god-color);
+
+            transition:
+                transform 0.3s ease,
+                background 0.3s ease;
+        }
+
+        .god-card:hover .god-icon {
+            transform: scale(1.08);
+        }
+
+        .god-icon svg {
+            width: 65px;
+            height: 65px;
+
+            stroke: currentColor;
+            fill: none;
+            stroke-width: 2.3;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+        /* =========================
+           GOD NAME AND DESCRIPTION
+        ========================= */
+
+        .god-card h2 {
+            font-size: 19px;
+            margin-bottom: 8px;
+            color: #3c3025;
+        }
+
+        .god-card p {
+            font-size: 13px;
+            line-height: 1.6;
+            color: #888;
+        }
+
+        .god-card .symbol {
+            display: inline-block;
+            margin-top: 15px;
+            padding: 7px 14px;
+
+            font-size: 12px;
+            font-weight: 600;
+
+            color: var(--god-color);
+            background: color-mix(
+                in srgb,
+                var(--god-color) 10%,
+                white
+            );
+
+            border-radius: 20px;
+        }
+
+        /* =========================
+           INDIVIDUAL COLORS
+        ========================= */
+
+        .ram {
+            --god-color: #e87519;
+        }
+
+        .hanuman {
+            --god-color: #d84315;
+        }
+
+        .krishna {
+            --god-color: #176b87;
+        }
+
+        .lakshmi {
+            --god-color: #d64a8a;
+        }
+
+        .ganpati {
+            --god-color: #e98b2a;
+        }
+
+        .shankar {
+            --god-color: #315a9e;
+        }
+
+        /* =========================
+           FOOTER
+        ========================= */
+
+        .footer {
+            text-align: center;
+            margin-top: 35px;
+            font-size: 13px;
+            color: #999;
+        }
+
+        /* =========================
+           RESPONSIVE DESIGN
+        ========================= */
+
+        @media (max-width: 768px) {
+
+            .gods-grid {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+                gap: 18px;
+            }
+
+            .section-heading h1 {
+                font-size: 26px;
+            }
+
+            .god-card {
+                padding: 25px 12px;
+            }
+
+            .god-icon {
+                width: 85px;
+                height: 85px;
+            }
+
+            .god-icon svg {
+                width: 55px;
+                height: 55px;
+            }
+        }
+
+        @media (max-width: 420px) {
+
+            body {
+                padding: 25px 12px;
+            }
+
+            .gods-grid {
+                gap: 12px;
+            }
+
+            .god-card {
+                padding: 20px 8px;
+            }
+
+            .god-card h2 {
+                font-size: 16px;
+            }
+
+            .god-card p {
+                font-size: 12px;
+            }
+        }
+
+        /* =========================
+           ACCESSIBILITY
+        ========================= */
+
+        .god-card:focus-visible {
+            outline: 3px solid var(--god-color);
+            outline-offset: 4px;
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            *,
+            *::before,
+            *::after {
+                transition: none !important;
+                scroll-behavior: auto !important;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <main class="container">
+
+        <header class="section-heading">
+            <h1>🙏 Hindu Gods</h1>
+
+            <p>
+                Explore divine symbols of devotion, wisdom,
+                strength, prosperity and spirituality.
+            </p>
+        </header>
+
+        <section class="gods-grid" id="godsGrid"
+                 aria-label="Hindu deities">
+
+            <!-- =========================
+                 LORD RAM
+            ========================== -->
+
+            <article class="god-card ram"
+                     tabindex="0"
+                     data-god="Lord Ram">
+
+                <div class="god-icon">
+
+                    <svg viewBox="0 0 64 64"
+                         role="img"
+                         aria-label="Bow and arrow">
+
+                        <!-- Bow -->
+                        <path d="M20 5
+                                 Q55 32 20 59"/>
+
+                        <!-- Bowstring -->
+                        <path d="M20 5 L20 59"/>
+
+                        <!-- Arrow -->
+                        <path d="M7 32 H55"/>
+
+                        <!-- Arrowhead -->
+                        <path d="M46 24 L55 32 L46 40"/>
+
+                        <!-- Arrow feathers -->
+                        <path d="M8 32 L4 26"/>
+                        <path d="M8 32 L4 38"/>
+
+                    </svg>
+
+                </div>
+
+                <h2>Lord Ram</h2>
+
+                <p>Symbol of righteousness, courage and dharma.</p>
+
+                <span class="symbol">Bow & Arrow</span>
+
+            </article>
+
+
+            <!-- =========================
+                 LORD HANUMAN
+            ========================== -->
+
+            <article class="god-card hanuman"
+                     tabindex="0"
+                     data-god="Lord Hanuman">
+
+                <div class="god-icon">
+
+                    <svg viewBox="0 0 64 64"
+                         role="img"
+                         aria-label="Gada mace">
+
+                        <!-- Mace head -->
+                        <path d="M22 5
+                                 C13 5 8 12 8 20
+                                 C8 29 15 34 22 34
+                                 C29 34 36 29 36 20
+                                 C36 12 31 5 22 5 Z"/>
+
+                        <!-- Decorative bands -->
+                        <path d="M10 16 H34"/>
+                        <path d="M10 24 H34"/>
+
+                        <!-- Handle -->
+                        <path d="M22 34 V56"/>
+
+                        <!-- Grip -->
+                        <path d="M17 41 H27"/>
+                        <path d="M17 46 H27"/>
+
+                        <!-- Bottom ornament -->
+                        <path d="M17 56 H27 L22 61 Z"/>
+
+                    </svg>
+
+                </div>
+
+                <h2>Lord Hanuman</h2>
+
+                <p>Symbol of strength, devotion and protection.</p>
+
+                <span class="symbol">Gada</span>
+
+            </article>
+
+
+            <!-- =========================
+                 LORD KRISHNA
+            ========================== -->
+
+            <article class="god-card krishna"
+                     tabindex="0"
+                     data-god="Lord Krishna">
+
+                <div class="god-icon">
+
+                    <svg viewBox="0 0 64 64"
+                         role="img"
+                         aria-label="Flute and peacock feather">
+
+                        <!-- Feather stem -->
+                        <path d="M34 29 Q43 18 39 5"/>
+
+                        <!-- Feather -->
+                        <path d="M39 5
+                                 C51 6 53 17 45 24
+                                 C41 27 37 28 34 29
+                                 C28 20 29 10 39 5 Z"/>
+
+                        <!-- Peacock eye -->
+                        <ellipse cx="40" cy="15"
+                                 rx="4" ry="6"/>
+
+                        <circle cx="40" cy="15"
+                                r="1.5"
+                                fill="currentColor"
+                                stroke="none"/>
+
+                        <!-- Flute -->
+                        <path d="M6 46 L57 29"/>
+
+                        <!-- Flute end -->
+                        <path d="M6 46 L11 49 L59 33 L57 29 Z"/>
+
+                        <!-- Finger holes -->
+                        <circle cx="22" cy="40" r="1.2"/>
+                        <circle cx="30" cy="37" r="1.2"/>
+                        <circle cx="38" cy="35" r="1.2"/>
+                        <circle cx="46" cy="32" r="1.2"/>
+
+                    </svg>
+
+                </div>
+
+                <h2>Lord Krishna</h2>
+
+                <p>Symbol of divine love, wisdom and joy.</p>
+
+                <span class="symbol">Flute & Feather</span>
+
+            </article>
+
+
+            <!-- =========================
+                 GODDESS LAKSHMI
+            ========================== -->
+
+            <article class="god-card lakshmi"
+                     tabindex="0"
+                     data-god="Goddess Lakshmi">
+
+                <div class="god-icon">
+
+                    <svg viewBox="0 0 64 64"
+                         role="img"
+                         aria-label="Lotus flower">
+
+                        <!-- Central petal -->
+                        <path d="M32 6
+                                 C20 20 23 30 32 38
+                                 C41 30 44 20 32 6 Z"/>
+
+                        <!-- Left upper petal -->
+                        <path d="M29 35
+                                 C14 32 8 21 11 15
+                                 C23 17 29 25 29 35 Z"/>
+
+                        <!-- Right upper petal -->
+                        <path d="M35 35
+                                 C50 32 56 21 53 15
+                                 C41 17 35 25 35 35 Z"/>
+
+                        <!-- Left lower petal -->
+                        <path d="M28 39
+                                 C14 34 6 36 7 28
+                                 C17 27 25 32 28 39 Z"/>
+
+                        <!-- Right lower petal -->
+                        <path d="M36 39
+                                 C50 34 58 36 57 28
+                                 C47 27 39 32 36 39 Z"/>
+
+                        <!-- Lotus base -->
+                        <path d="M9 43
+                                 Q20 39 32 43
+                                 Q44 39 55 43"/>
+
+                        <!-- Lower petals -->
+                        <path d="M9 43 Q32 62 55 43"/>
+                        <path d="M19 49 Q32 56 45 49"/>
+
+                    </svg>
+
+                </div>
+
+                <h2>Goddess Lakshmi</h2>
+
+                <p>Symbol of prosperity, purity and abundance.</p>
+
+                <span class="symbol">Lotus</span>
+
+            </article>
+
+
+            <!-- =========================
+                 LORD GANPATI
+            ========================== -->
+
+            <article class="god-card ganpati"
+                     tabindex="0"
+                     data-god="Lord Ganpati">
+
+                <div class="god-icon">
+
+                    <svg viewBox="0 0 64 64"
+                         role="img"
+                         aria-label="Ganesha elephant head">
+
+                        <!-- Crown -->
+                        <path d="M24 13 L24 7 L32 3 L40 7 L40 13"/>
+                        <path d="M27 8 H37"/>
+
+                        <!-- Left ear -->
+                        <path d="M23 17
+                                 C13 8 5 15 7 27
+                                 C8 35 14 39 23 35"/>
+
+                        <!-- Right ear -->
+                        <path d="M41 17
+                                 C51 8 59 15 57 27
+                                 C56 35 50 39 41 35"/>
+
+                        <!-- Head -->
+                        <path d="M23 16
+                                 C23 10 41 10 41 16
+                                 L41 29
+                                 C41 38 37 42 32 42
+                                 C27 42 23 38 23 29 Z"/>
+
+                        <!-- Eyes -->
+                        <circle cx="27" cy="24" r="1.4"
+                                fill="currentColor"/>
+
+                        <circle cx="37" cy="24" r="1.4"
+                                fill="currentColor"/>
+
+                        <!-- Tusks -->
+                        <path d="M24 32 L19 38 L26 36"/>
+                        <path d="M40 32 L45 38 L38 36"/>
+
+                        <!-- Trunk -->
+                        <path d="M32 28
+                                 C32 36 39 39 39 45
+                                 C39 51 34 55 29 51"/>
+
+                        <!-- Forehead marking -->
+                        <path d="M29 17 H35"/>
+
+                    </svg>
+
+                </div>
+
+                <h2>Lord Ganpati</h2>
+
+                <p>Symbol of wisdom, intelligence and new beginnings.</p>
+
+                <span class="symbol">Ganesha</span>
+
+            </article>
+
+
+            <!-- =========================
+                 LORD SHANKAR / SHIVA
+            ========================== -->
+
+            <article class="god-card shankar"
+                     tabindex="0"
+                     data-god="Lord Shankar">
+
+                <div class="god-icon">
+
+                    <svg viewBox="0 0 64 64"
+                         role="img"
+                         aria-label="Trishul trident">
+
+                        <!-- Left prong -->
+                        <path d="M15 8
+                                 C5 18 12 30 22 29
+                                 C26 29 29 26 32 22"/>
+
+                        <!-- Center prong -->
+                        <path d="M32 7 V58"/>
+
+                        <!-- Right prong -->
+                        <path d="M49 8
+                                 C59 18 52 30 42 29
+                                 C38 29 35 26 32 22"/>
+
+                        <!-- Center tip -->
+                        <path d="M32 7 L27 14"/>
+                        <path d="M32 7 L37 14"/>
+
+                        <!-- Connecting bar -->
+                        <path d="M20 36 Q32 43 44 36"/>
+
+                        <!-- Handle decoration -->
+                        <path d="M26 47 H38"/>
+                        <path d="M27 51 H37"/>
+
+                        <!-- Handle base -->
+                        <path d="M27 58 H37"/>
+
+                    </svg>
+
+                </div>
+
+                <h2>Lord Shankar</h2>
+
+                <p>Symbol of divine power, transformation and meditation.</p>
+
+                <span class="symbol">Trishul</span>
+
+            </article>
+
+        </section>
+
+        <footer class="footer">
+            Hindu Deity Icon Collection
+        </footer>
+
+    </main>
+
+
+    <script>
+        // Select all deity cards
+        const godCards = document.querySelectorAll(".god-card");
+
+        // Add interaction to every card
+        godCards.forEach(function (card) {
+
+            function selectGod() {
+                const godName = card.dataset.god;
+
+                console.log("Selected deity:", godName);
+
+                // Custom event for integration with other components
+                document.dispatchEvent(
+                    new CustomEvent("deitySelected", {
+                        detail: {
+                            name: godName,
+                            element: card
+                        }
+                    })
+                );
+            }
+
+            // Mouse click
+            card.addEventListener("click", selectGod);
+
+            // Keyboard accessibility
+            card.addEventListener("keydown", function (event) {
+
+                if (
+                    event.key === "Enter" ||
+                    event.key === " "
+                ) {
+                    event.preventDefault();
+                    selectGod();
+                }
+
+            });
+
+        });
+
+        // Example: Listen for deity selection
+        document.addEventListener("deitySelected", function (event) {
+
+            console.log(
+                "Deity selected:",
+                event.detail.name
+            );
+
+        });
+    </script>
+
+</body>
+</html>

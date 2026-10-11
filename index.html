@@ -1,0 +1,1607 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Divine Reels - Hindu Gods Slot Game</title>
+
+    <style>
+        /* ========================================
+           GENERAL STYLING
+        ======================================== */
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            background: #fffaf2;
+            color: #333;
+            padding: 30px 16px;
+        }
+
+        button,
+        select {
+            font: inherit;
+        }
+
+        /* ========================================
+           DIVINE REELS GAME
+        ======================================== */
+
+        .game {
+            width: 100%;
+            max-width: 460px;
+            margin: 0 auto 65px;
+            padding: 25px 20px;
+            text-align: center;
+
+            color: #fff5dc;
+
+            background: linear-gradient(
+                145deg,
+                #63251d,
+                #34121b
+            );
+
+            border: 3px solid #e7b94e;
+            border-radius: 22px;
+
+            box-shadow:
+                0 12px 35px rgba(0, 0, 0, 0.20);
+        }
+
+        .game h1 {
+            margin-bottom: 10px;
+            color: #ffd45c;
+            font-size: clamp(25px, 6vw, 32px);
+        }
+
+        .game-subtitle {
+            color: #f2d8a3;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .balance {
+            margin: 22px 0;
+            font-size: 19px;
+            color: #ffe9b0;
+        }
+
+        .balance strong {
+            color: #ffd45c;
+        }
+
+        /* ========================================
+           THREE REELS
+        ======================================== */
+
+        .reels {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 8px;
+
+            margin: 25px 0;
+            padding: 10px;
+
+            background: #250f12;
+            border: 2px solid #e7b94e;
+            border-radius: 15px;
+        }
+
+        .reel {
+            min-width: 0;
+            height: 125px;
+            padding: 8px 3px;
+
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+
+            overflow: hidden;
+
+            background: linear-gradient(
+                #fff4d7,
+                #e8c783
+            );
+
+            border: 2px solid #d6a447;
+            border-radius: 12px;
+
+            transition:
+                background 0.2s,
+                border-color 0.2s;
+        }
+
+        .reel-icon {
+            width: 62px;
+            height: 62px;
+
+            display: grid;
+            place-items: center;
+
+            flex-shrink: 0;
+        }
+
+        .reel-icon svg {
+            display: block;
+            width: 100%;
+            height: 100%;
+
+            fill: none;
+            stroke: currentColor;
+            stroke-width: 2.5;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+        .reel-name {
+            color: #542014;
+            font-size: clamp(9px, 2.5vw, 12px);
+            font-weight: bold;
+            line-height: 1.25;
+            text-align: center;
+            overflow-wrap: anywhere;
+        }
+
+        .reel.spinning {
+            animation: shake 0.12s infinite alternate;
+        }
+
+        @keyframes shake {
+            from {
+                transform: translateY(-3px);
+            }
+
+            to {
+                transform: translateY(3px);
+            }
+        }
+
+        .reel.winner {
+            background: linear-gradient(
+                #fff9db,
+                #ffd45c
+            );
+
+            border-color: #fff4a3;
+
+            box-shadow:
+                0 0 16px rgba(255, 212, 92, 0.8);
+        }
+
+        .reel.selected {
+            outline: 3px solid #23865b;
+            outline-offset: 2px;
+        }
+
+        /* ========================================
+           GAME CONTROLS
+        ======================================== */
+
+        .controls {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+        }
+
+        .controls label {
+            color: #ffedc2;
+            font-weight: bold;
+        }
+
+        .controls select {
+            padding: 12px;
+            min-height: 44px;
+
+            color: #28140e;
+            background: #fff8e8;
+
+            border: none;
+            border-radius: 8px;
+        }
+
+        button {
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        button:disabled,
+        select:disabled {
+            opacity: 0.55;
+            cursor: not-allowed;
+        }
+
+        #spin {
+            width: 100%;
+            min-height: 55px;
+            padding: 16px;
+
+            color: #35140d;
+
+            background: linear-gradient(
+                #ffe69a,
+                #e7b43f
+            );
+
+            border: 2px solid #fff0b6;
+            border-radius: 12px;
+
+            font-size: 21px;
+            letter-spacing: 1px;
+        }
+
+        #spin:not(:disabled):active {
+            transform: scale(0.98);
+        }
+
+        #message {
+            min-height: 48px;
+            margin: 20px 0 10px;
+
+            color: #ffdf85;
+
+            font-size: 15px;
+            font-weight: bold;
+            line-height: 1.6;
+        }
+
+        #reset {
+            width: 100%;
+            margin-top: 10px;
+            padding: 12px;
+
+            color: #ffdf9b;
+            background: #54251f;
+
+            border: 1px solid #bd8845;
+            border-radius: 8px;
+        }
+
+        .game-divider {
+            border: none;
+            border-top: 1px solid #a66b42;
+            margin: 20px 0;
+        }
+
+        .payout-guide {
+            color: #e9d4b5;
+            font-size: 13px;
+            line-height: 1.9;
+        }
+
+        .payout-guide h2 {
+            margin-bottom: 10px;
+            color: #ffd45c;
+            font-size: 15px;
+        }
+
+        /* ========================================
+           GALLERY SECTION
+        ======================================== */
+
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        .section-heading {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .section-heading h2 {
+            margin-bottom: 12px;
+            color: #8b4513;
+            font-size: 32px;
+        }
+
+        .section-heading p {
+            max-width: 650px;
+            margin: 0 auto;
+
+            color: #777;
+            font-size: 15px;
+            line-height: 1.7;
+        }
+
+        /* ========================================
+           ICON GRID
+        ======================================== */
+
+        .gods-grid {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 25px;
+        }
+
+        /* ========================================
+           GOD CARDS
+        ======================================== */
+
+        .god-card {
+            --god-color: #e87519;
+
+            padding: 30px 20px;
+            text-align: center;
+
+            background: #fff;
+            border: 1px solid #f0e5d5;
+            border-radius: 18px;
+
+            cursor: pointer;
+
+            transition:
+                transform 0.3s ease,
+                box-shadow 0.3s ease,
+                border-color 0.3s ease;
+        }
+
+        .god-card:hover {
+            transform: translateY(-6px);
+
+            border-color: var(--god-color);
+
+            box-shadow:
+                0 12px 30px rgba(90, 50, 10, 0.10);
+        }
+
+        .god-card.selected {
+            border: 2px solid var(--god-color);
+
+            box-shadow:
+                0 0 0 3px
+                color-mix(
+                    in srgb,
+                    var(--god-color) 20%,
+                    white
+                );
+        }
+
+        .god-card:focus-visible {
+            outline: 3px solid var(--god-color);
+            outline-offset: 4px;
+        }
+
+        /* ========================================
+           SVG ICON CONTAINER
+        ======================================== */
+
+        .god-icon {
+            width: 100px;
+            height: 100px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            margin: 0 auto 20px;
+
+            border-radius: 50%;
+
+            background: color-mix(
+                in srgb,
+                var(--god-color) 10%,
+                white
+            );
+
+            color: var(--god-color);
+
+            transition:
+                transform 0.3s ease,
+                background 0.3s ease;
+        }
+
+        .god-card:hover .god-icon {
+            transform: scale(1.08);
+        }
+
+        .god-icon svg {
+            width: 65px;
+            height: 65px;
+
+            fill: none;
+            stroke: currentColor;
+            stroke-width: 2.3;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+        /* ========================================
+           GOD NAMES AND DESCRIPTIONS
+        ======================================== */
+
+        .god-card h3 {
+            margin-bottom: 8px;
+            color: #3c3025;
+            font-size: 19px;
+        }
+
+        .god-card p {
+            color: #888;
+            font-size: 13px;
+            line-height: 1.6;
+        }
+
+        .god-card .symbol {
+            display: inline-block;
+
+            margin-top: 15px;
+            padding: 7px 14px;
+
+            color: var(--god-color);
+
+            background: color-mix(
+                in srgb,
+                var(--god-color) 10%,
+                white
+            );
+
+            border-radius: 20px;
+
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        /* ========================================
+           INDIVIDUAL DEITY COLORS
+        ======================================== */
+
+        .ram {
+            --god-color: #e87519;
+        }
+
+        .hanuman {
+            --god-color: #d84315;
+        }
+
+        .krishna {
+            --god-color: #176b87;
+        }
+
+        .lakshmi {
+            --god-color: #d64a8a;
+        }
+
+        .ganpati {
+            --god-color: #e98b2a;
+        }
+
+        .shankar {
+            --god-color: #315a9e;
+        }
+
+        /* ========================================
+           GALLERY FOOTER
+        ======================================== */
+
+        .footer {
+            margin-top: 35px;
+            text-align: center;
+            color: #999;
+            font-size: 13px;
+            line-height: 1.7;
+        }
+
+        /* ========================================
+           RESPONSIVE DESIGN
+        ======================================== */
+
+        @media (max-width: 768px) {
+            .gods-grid {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+                gap: 18px;
+            }
+
+            .section-heading h2 {
+                font-size: 26px;
+            }
+
+            .god-card {
+                padding: 25px 12px;
+            }
+
+            .god-icon {
+                width: 85px;
+                height: 85px;
+            }
+
+            .god-icon svg {
+                width: 55px;
+                height: 55px;
+            }
+        }
+
+        @media (max-width: 420px) {
+            body {
+                padding: 25px 12px;
+            }
+
+            .game {
+                padding: 20px 12px;
+            }
+
+            .gods-grid {
+                gap: 12px;
+            }
+
+            .god-card {
+                padding: 20px 8px;
+            }
+
+            .god-card h3 {
+                font-size: 16px;
+            }
+
+            .god-card p {
+                font-size: 12px;
+            }
+
+            .reels {
+                gap: 5px;
+                padding: 6px;
+            }
+
+            .reel {
+                height: 112px;
+            }
+
+            .reel-icon {
+                width: 48px;
+                height: 48px;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            *,
+            *::before,
+            *::after {
+                transition: none !important;
+                animation: none !important;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- ========================================
+         SECTION 1: DIVINE REELS GAME
+    ======================================== -->
+
+    <main class="game">
+
+        <h1>🪷 Divine Reels 🪷</h1>
+
+        <p class="game-subtitle">
+            Hindu Deity-Themed Three-Reel Game
+        </p>
+
+        <div class="balance">
+            Virtual Credits:
+            <strong id="balance">1000</strong>
+        </div>
+
+        <!-- Three reels -->
+
+        <div class="reels" aria-label="Three game reels">
+
+            <div class="reel" id="reel0"></div>
+
+            <div class="reel" id="reel1"></div>
+
+            <div class="reel" id="reel2"></div>
+
+        </div>
+
+        <!-- Bet selection -->
+
+        <div class="controls">
+
+            <label for="bet">Bet:</label>
+
+            <select id="bet">
+                <option value="10">10 credits</option>
+                <option value="25">25 credits</option>
+                <option value="50">50 credits</option>
+                <option value="100">100 credits</option>
+            </select>
+
+        </div>
+
+        <button id="spin" type="button">
+            SPIN
+        </button>
+
+        <p id="message" aria-live="polite">
+            Welcome! Press SPIN to begin.
+        </p>
+
+        <button id="reset" type="button">
+            RESET VIRTUAL CREDITS
+        </button>
+
+        <hr class="game-divider">
+
+        <div class="payout-guide">
+
+            <h2>DIVINE SYMBOLS &amp; REWARDS</h2>
+
+            Lord Ram — 2×<br>
+            Lord Hanuman — 3×<br>
+            Lord Krishna — 4×<br>
+            Goddess Lakshmi — 5×<br>
+            Lord Ganpati — 8×<br>
+            Lord Shankar — 10×<br>
+
+            <br>
+
+            Match all three symbols to win virtual credits.
+
+            <br>
+
+            Rewards include the returned bet.
+
+        </div>
+
+    </main>
+
+
+    <!-- ========================================
+         SECTION 2: HINDU GODS ICON GALLERY
+    ======================================== -->
+
+    <section class="container" aria-labelledby="gallery-title">
+
+        <header class="section-heading">
+
+            <h2 id="gallery-title">🙏 Hindu Gods</h2>
+
+            <p>
+                Explore divine symbols of devotion, wisdom,
+                strength, prosperity and spirituality.
+                Select a deity to highlight its symbol in the game.
+            </p>
+
+        </header>
+
+
+        <div class="gods-grid" id="godsGrid">
+
+            <!-- =================================
+                 LORD RAM
+            ================================== -->
+
+            <article
+                class="god-card ram"
+                tabindex="0"
+                role="button"
+                aria-pressed="false"
+                data-god="ram"
+            >
+
+                <div class="god-icon">
+
+                    <svg viewBox="0 0 64 64"
+                         role="img"
+                         aria-label="Bow and arrow">
+
+                        <path d="M20 5 Q55 32 20 59"/>
+
+                        <path d="M20 5 L20 59"/>
+
+                        <path d="M7 32 H55"/>
+
+                        <path d="M46 24 L55 32 L46 40"/>
+
+                        <path d="M8 32 L4 26"/>
+
+                        <path d="M8 32 L4 38"/>
+
+                    </svg>
+
+                </div>
+
+                <h3>Lord Ram</h3>
+
+                <p>
+                    Symbol of righteousness, courage and dharma.
+                </p>
+
+                <span class="symbol">Bow &amp; Arrow</span>
+
+            </article>
+
+
+            <!-- =================================
+                 LORD HANUMAN
+            ================================== -->
+
+            <article
+                class="god-card hanuman"
+                tabindex="0"
+                role="button"
+                aria-pressed="false"
+                data-god="hanuman"
+            >
+
+                <div class="god-icon">
+
+                    <svg viewBox="0 0 64 64"
+                         role="img"
+                         aria-label="Gada mace">
+
+                        <path d="M22 5
+                                 C13 5 8 12 8 20
+                                 C8 29 15 34 22 34
+                                 C29 34 36 29 36 20
+                                 C36 12 31 5 22 5 Z"/>
+
+                        <path d="M10 16 H34"/>
+
+                        <path d="M10 24 H34"/>
+
+                        <path d="M22 34 V56"/>
+
+                        <path d="M17 41 H27"/>
+
+                        <path d="M17 46 H27"/>
+
+                        <path d="M17 56 H27 L22 61 Z"/>
+
+                    </svg>
+
+                </div>
+
+                <h3>Lord Hanuman</h3>
+
+                <p>
+                    Symbol of strength, devotion and protection.
+                </p>
+
+                <span class="symbol">Gada</span>
+
+            </article>
+
+
+            <!-- =================================
+                 LORD KRISHNA
+            ================================== -->
+
+            <article
+                class="god-card krishna"
+                tabindex="0"
+                role="button"
+                aria-pressed="false"
+                data-god="krishna"
+            >
+
+                <div class="god-icon">
+
+                    <svg viewBox="0 0 64 64"
+                         role="img"
+                         aria-label="Flute and peacock feather">
+
+                        <path d="M34 29 Q43 18 39 5"/>
+
+                        <path d="M39 5
+                                 C51 6 53 17 45 24
+                                 C41 27 37 28 34 29
+                                 C28 20 29 10 39 5 Z"/>
+
+                        <ellipse cx="40" cy="15"
+                                 rx="4" ry="6"/>
+
+                        <circle cx="40" cy="15"
+                                r="1.5"
+                                fill="currentColor"
+                                stroke="none"/>
+
+                        <path d="M6 46 L57 29"/>
+
+                        <path d="M6 46 L11 49 L59 33 L57 29 Z"/>
+
+                        <circle cx="22" cy="40" r="1.2"/>
+
+                        <circle cx="30" cy="37" r="1.2"/>
+
+                        <circle cx="38" cy="35" r="1.2"/>
+
+                        <circle cx="46" cy="32" r="1.2"/>
+
+                    </svg>
+
+                </div>
+
+                <h3>Lord Krishna</h3>
+
+                <p>
+                    Symbol of divine love, wisdom and joy.
+                </p>
+
+                <span class="symbol">Flute &amp; Feather</span>
+
+            </article>
+
+
+            <!-- =================================
+                 GODDESS LAKSHMI
+            ================================== -->
+
+            <article
+                class="god-card lakshmi"
+                tabindex="0"
+                role="button"
+                aria-pressed="false"
+                data-god="lakshmi"
+            >
+
+                <div class="god-icon">
+
+                    <svg viewBox="0 0 64 64"
+                         role="img"
+                         aria-label="Lotus flower">
+
+                        <path d="M32 6
+                                 C20 20 23 30 32 38
+                                 C41 30 44 20 32 6 Z"/>
+
+                        <path d="M29 35
+                                 C14 32 8 21 11 15
+                                 C23 17 29 25 29 35 Z"/>
+
+                        <path d="M35 35
+                                 C50 32 56 21 53 15
+                                 C41 17 35 25 35 35 Z"/>
+
+                        <path d="M28 39
+                                 C14 34 6 36 7 28
+                                 C17 27 25 32 28 39 Z"/>
+
+                        <path d="M36 39
+                                 C50 34 58 36 57 28
+                                 C47 27 39 32 36 39 Z"/>
+
+                        <path d="M9 43 Q20 39 32 43 Q44 39 55 43"/>
+
+                        <path d="M9 43 Q32 62 55 43"/>
+
+                        <path d="M19 49 Q32 56 45 49"/>
+
+                    </svg>
+
+                </div>
+
+                <h3>Goddess Lakshmi</h3>
+
+                <p>
+                    Symbol of prosperity, purity and abundance.
+                </p>
+
+                <span class="symbol">Lotus</span>
+
+            </article>
+
+
+            <!-- =================================
+                 LORD GANPATI
+            ================================== -->
+
+            <article
+                class="god-card ganpati"
+                tabindex="0"
+                role="button"
+                aria-pressed="false"
+                data-god="ganpati"
+            >
+
+                <div class="god-icon">
+
+                    <svg viewBox="0 0 64 64"
+                         role="img"
+                         aria-label="Ganesha elephant head">
+
+                        <path d="M24 13 L24 7 L32 3 L40 7 L40 13"/>
+
+                        <path d="M27 8 H37"/>
+
+                        <path d="M23 17
+                                 C13 8 5 15 7 27
+                                 C8 35 14 39 23 35"/>
+
+                        <path d="M41 17
+                                 C51 8 59 15 57 27
+                                 C56 35 50 39 41 35"/>
+
+                        <path d="M23 16
+                                 C23 10 41 10 41 16
+                                 L41 29
+                                 C41 38 37 42 32 42
+                                 C27 42 23 38 23 29 Z"/>
+
+                        <circle cx="27" cy="24"
+                                r="1.4"
+                                fill="currentColor"/>
+
+                        <circle cx="37" cy="24"
+                                r="1.4"
+                                fill="currentColor"/>
+
+                        <path d="M24 32 L19 38 L26 36"/>
+
+                        <path d="M40 32 L45 38 L38 36"/>
+
+                        <path d="M32 28
+                                 C32 36 39 39 39 45
+                                 C39 51 34 55 29 51"/>
+
+                        <path d="M29 17 H35"/>
+
+                    </svg>
+
+                </div>
+
+                <h3>Lord Ganpati</h3>
+
+                <p>
+                    Symbol of wisdom, intelligence and new beginnings.
+                </p>
+
+                <span class="symbol">Ganesha</span>
+
+            </article>
+
+
+            <!-- =================================
+                 LORD SHANKAR
+            ================================== -->
+
+            <article
+                class="god-card shankar"
+                tabindex="0"
+                role="button"
+                aria-pressed="false"
+                data-god="shankar"
+            >
+
+                <div class="god-icon">
+
+                    <svg viewBox="0 0 64 64"
+                         role="img"
+                         aria-label="Trishul trident">
+
+                        <path d="M15 8
+                                 C5 18 12 30 22 29
+                                 C26 29 29 26 32 22"/>
+
+                        <path d="M32 7 V58"/>
+
+                        <path d="M49 8
+                                 C59 18 52 30 42 29
+                                 C38 29 35 26 32 22"/>
+
+                        <path d="M32 7 L27 14"/>
+
+                        <path d="M32 7 L37 14"/>
+
+                        <path d="M20 36 Q32 43 44 36"/>
+
+                        <path d="M26 47 H38"/>
+
+                        <path d="M27 51 H37"/>
+
+                        <path d="M27 58 H37"/>
+
+                    </svg>
+
+                </div>
+
+                <h3>Lord Shankar</h3>
+
+                <p>
+                    Symbol of divine power, transformation and meditation.
+                </p>
+
+                <span class="symbol">Trishul</span>
+
+            </article>
+
+        </div>
+
+
+        <footer class="footer">
+            Hindu Deity Icon Collection<br>
+            Select a deity to highlight its symbol in Divine Reels.
+        </footer>
+
+    </section>
+
+
+    <!-- ========================================
+         SECTION 3: JAVASCRIPT
+    ======================================== -->
+
+    <script>
+        "use strict";
+
+        /* ========================================
+           GAME SYMBOLS
+        ======================================== */
+
+        const symbols = [
+            {
+                id: "ram",
+                name: "Lord Ram",
+                multiplier: 2,
+                weight: 25,
+                color: "#e87519"
+            },
+            {
+                id: "hanuman",
+                name: "Lord Hanuman",
+                multiplier: 3,
+                weight: 22,
+                color: "#d84315"
+            },
+            {
+                id: "krishna",
+                name: "Lord Krishna",
+                multiplier: 4,
+                weight: 19,
+                color: "#176b87"
+            },
+            {
+                id: "lakshmi",
+                name: "Goddess Lakshmi",
+                multiplier: 5,
+                weight: 15,
+                color: "#d64a8a"
+            },
+            {
+                id: "ganpati",
+                name: "Lord Ganpati",
+                multiplier: 8,
+                weight: 12,
+                color: "#e98b2a"
+            },
+            {
+                id: "shankar",
+                name: "Lord Shankar",
+                multiplier: 10,
+                weight: 7,
+                color: "#315a9e"
+            }
+        ];
+
+        const INITIAL_CREDITS = 1000;
+
+        let credits = INITIAL_CREDITS;
+        let spinning = false;
+        let selectedGod = null;
+
+        /* ========================================
+           HTML ELEMENTS
+        ======================================== */
+
+        const balanceEl =
+            document.getElementById("balance");
+
+        const betEl =
+            document.getElementById("bet");
+
+        const spinButton =
+            document.getElementById("spin");
+
+        const resetButton =
+            document.getElementById("reset");
+
+        const messageEl =
+            document.getElementById("message");
+
+        const reels = [
+            document.getElementById("reel0"),
+            document.getElementById("reel1"),
+            document.getElementById("reel2")
+        ];
+
+        const godCards =
+            document.querySelectorAll(".god-card");
+
+        /* ========================================
+           SVG ICONS FOR THE REELS
+           
+           The same six illustrations are used
+           in both the gallery and the slot machine.
+        ======================================== */
+
+        const iconMarkup = {
+
+            ram: `
+                <svg viewBox="0 0 64 64" aria-hidden="true">
+                    <path d="M20 5 Q55 32 20 59"/>
+                    <path d="M20 5 L20 59"/>
+                    <path d="M7 32 H55"/>
+                    <path d="M46 24 L55 32 L46 40"/>
+                    <path d="M8 32 L4 26"/>
+                    <path d="M8 32 L4 38"/>
+                </svg>
+            `,
+
+            hanuman: `
+                <svg viewBox="0 0 64 64" aria-hidden="true">
+                    <path d="M22 5 C13 5 8 12 8 20 C8 29 15 34 22 34 C29 34 36 29 36 20 C36 12 31 5 22 5 Z"/>
+                    <path d="M10 16 H34"/>
+                    <path d="M10 24 H34"/>
+                    <path d="M22 34 V56"/>
+                    <path d="M17 41 H27"/>
+                    <path d="M17 46 H27"/>
+                    <path d="M17 56 H27 L22 61 Z"/>
+                </svg>
+            `,
+
+            krishna: `
+                <svg viewBox="0 0 64 64" aria-hidden="true">
+                    <path d="M34 29 Q43 18 39 5"/>
+                    <path d="M39 5 C51 6 53 17 45 24 C41 27 37 28 34 29 C28 20 29 10 39 5 Z"/>
+                    <ellipse cx="40" cy="15" rx="4" ry="6"/>
+                    <circle cx="40" cy="15" r="1.5" fill="currentColor" stroke="none"/>
+                    <path d="M6 46 L57 29"/>
+                    <path d="M6 46 L11 49 L59 33 L57 29 Z"/>
+                    <circle cx="22" cy="40" r="1.2"/>
+                    <circle cx="30" cy="37" r="1.2"/>
+                    <circle cx="38" cy="35" r="1.2"/>
+                    <circle cx="46" cy="32" r="1.2"/>
+                </svg>
+            `,
+
+            lakshmi: `
+                <svg viewBox="0 0 64 64" aria-hidden="true">
+                    <path d="M32 6 C20 20 23 30 32 38 C41 30 44 20 32 6 Z"/>
+                    <path d="M29 35 C14 32 8 21 11 15 C23 17 29 25 29 35 Z"/>
+                    <path d="M35 35 C50 32 56 21 53 15 C41 17 35 25 35 35 Z"/>
+                    <path d="M28 39 C14 34 6 36 7 28 C17 27 25 32 28 39 Z"/>
+                    <path d="M36 39 C50 34 58 36 57 28 C47 27 39 32 36 39 Z"/>
+                    <path d="M9 43 Q20 39 32 43 Q44 39 55 43"/>
+                    <path d="M9 43 Q32 62 55 43"/>
+                    <path d="M19 49 Q32 56 45 49"/>
+                </svg>
+            `,
+
+            ganpati: `
+                <svg viewBox="0 0 64 64" aria-hidden="true">
+                    <path d="M24 13 L24 7 L32 3 L40 7 L40 13"/>
+                    <path d="M27 8 H37"/>
+                    <path d="M23 17 C13 8 5 15 7 27 C8 35 14 39 23 35"/>
+                    <path d="M41 17 C51 8 59 15 57 27 C56 35 50 39 41 35"/>
+                    <path d="M23 16 C23 10 41 10 41 16 L41 29 C41 38 37 42 32 42 C27 42 23 38 23 29 Z"/>
+                    <circle cx="27" cy="24" r="1.4" fill="currentColor"/>
+                    <circle cx="37" cy="24" r="1.4" fill="currentColor"/>
+                    <path d="M24 32 L19 38 L26 36"/>
+                    <path d="M40 32 L45 38 L38 36"/>
+                    <path d="M32 28 C32 36 39 39 39 45 C39 51 34 55 29 51"/>
+                    <path d="M29 17 H35"/>
+                </svg>
+            `,
+
+            shankar: `
+                <svg viewBox="0 0 64 64" aria-hidden="true">
+                    <path d="M15 8 C5 18 12 30 22 29 C26 29 29 26 32 22"/>
+                    <path d="M32 7 V58"/>
+                    <path d="M49 8 C59 18 52 30 42 29 C38 29 35 26 32 22"/>
+                    <path d="M32 7 L27 14"/>
+                    <path d="M32 7 L37 14"/>
+                    <path d="M20 36 Q32 43 44 36"/>
+                    <path d="M26 47 H38"/>
+                    <path d="M27 51 H37"/>
+                    <path d="M27 58 H37"/>
+                </svg>
+            `
+        };
+
+        /* ========================================
+           BALANCE
+        ======================================== */
+
+        function updateBalance() {
+            balanceEl.textContent =
+                credits.toLocaleString();
+        }
+
+        /* ========================================
+           RANDOM SYMBOL SELECTION
+        ======================================== */
+
+        function randomSymbol() {
+
+            const totalWeight = symbols.reduce(
+                (sum, symbol) => sum + symbol.weight,
+                0
+            );
+
+            let roll = Math.random() * totalWeight;
+
+            for (const symbol of symbols) {
+
+                roll -= symbol.weight;
+
+                if (roll < 0) {
+                    return symbol;
+                }
+            }
+
+            return symbols[symbols.length - 1];
+        }
+
+        /* ========================================
+           DISPLAY SYMBOL IN A REEL
+        ======================================== */
+
+        function displaySymbol(reel, symbol) {
+
+            const icon = document.createElement("div");
+
+            icon.className = "reel-icon";
+            icon.style.color = symbol.color;
+
+            /*
+             * SVG markup is defined by this application,
+             * not supplied by the player.
+             */
+
+            icon.innerHTML = iconMarkup[symbol.id];
+
+            const name = document.createElement("span");
+
+            name.className = "reel-name";
+            name.textContent = symbol.name;
+
+            reel.replaceChildren(icon, name);
+
+            reel.dataset.symbol = symbol.id;
+        }
+
+        /* ========================================
+           UTILITIES
+        ======================================== */
+
+        function sleep(ms) {
+            return new Promise(resolve => {
+                setTimeout(resolve, ms);
+            });
+        }
+
+        function clearHighlights() {
+
+            reels.forEach(reel => {
+                reel.classList.remove("winner", "selected");
+            });
+        }
+
+        /* ========================================
+           DEITY GALLERY INTERACTION
+        ======================================== */
+
+        function selectGod(card) {
+
+            selectedGod = card.dataset.god;
+
+            const symbol = symbols.find(
+                item => item.id === selectedGod
+            );
+
+            /*
+             * Highlight the selected gallery card.
+             */
+
+            godCards.forEach(item => {
+
+                const isSelected = item === card;
+
+                item.classList.toggle(
+                    "selected",
+                    isSelected
+                );
+
+                item.setAttribute(
+                    "aria-pressed",
+                    String(isSelected)
+                );
+            });
+
+            /*
+             * Highlight reels displaying the selected deity.
+             */
+
+            reels.forEach(reel => {
+
+                reel.classList.toggle(
+                    "selected",
+                    reel.dataset.symbol === selectedGod
+                );
+            });
+
+            if (symbol) {
+
+                messageEl.textContent =
+                    `${symbol.name} selected. ` +
+                    "Press SPIN to play!";
+            }
+
+            /*
+             * Dispatch an event for future integration.
+             */
+
+            document.dispatchEvent(
+                new CustomEvent("deitySelected", {
+                    detail: {
+                        id: selectedGod,
+                        name: symbol ? symbol.name : ""
+                    }
+                })
+            );
+        }
+
+        /*
+         * Support mouse, touch and keyboard interaction.
+         */
+
+        godCards.forEach(card => {
+
+            card.addEventListener("click", () => {
+                selectGod(card);
+            });
+
+            card.addEventListener("keydown", event => {
+
+                if (
+                    event.key === "Enter" ||
+                    event.key === " "
+                ) {
+                    event.preventDefault();
+                    selectGod(card);
+                }
+            });
+        });
+
+        /*
+         * Optional event listener for other components.
+         */
+
+        document.addEventListener(
+            "deitySelected",
+            event => {
+                console.log(
+                    "Selected deity:",
+                    event.detail.name
+                );
+            }
+        );
+
+        /* ========================================
+           SPIN GAME
+        ======================================== */
+
+        async function spin() {
+
+            if (spinning) {
+                return;
+            }
+
+            const bet = Number(betEl.value);
+
+            if (!Number.isInteger(bet) || bet <= 0) {
+
+                messageEl.textContent =
+                    "Please select a valid bet.";
+
+                return;
+            }
+
+            if (credits < bet) {
+
+                messageEl.textContent =
+                    "Not enough virtual credits. " +
+                    "Reset your credits to play again.";
+
+                return;
+            }
+
+            spinning = true;
+
+            spinButton.disabled = true;
+            betEl.disabled = true;
+            resetButton.disabled = true;
+
+            clearHighlights();
+
+            /*
+             * Deduct the virtual bet.
+             */
+
+            credits -= bet;
+
+            updateBalance();
+
+            messageEl.textContent =
+                "The divine reels are spinning...";
+
+            reels.forEach(reel => {
+                reel.classList.add("spinning");
+            });
+
+            /*
+             * Determine the result before the animation.
+             */
+
+            const result = [
+                randomSymbol(),
+                randomSymbol(),
+                randomSymbol()
+            ];
+
+            /*
+             * Animate and stop reels one at a time.
+             */
+
+            for (let i = 0; i < reels.length; i++) {
+
+                const duration = 800 + i * 500;
+                const start = Date.now();
+
+                while (Date.now() - start < duration) {
+
+                    displaySymbol(
+                        reels[i],
+                        randomSymbol()
+                    );
+
+                    await sleep(80);
+                }
+
+                /*
+                 * Display the final predetermined symbol.
+                 */
+
+                displaySymbol(reels[i], result[i]);
+
+                reels[i].classList.remove("spinning");
+            }
+
+            /* ====================================
+               CHECK WINNING COMBINATION
+            ==================================== */
+
+            const allMatch = result.every(
+                symbol => symbol.id === result[0].id
+            );
+
+            if (allMatch) {
+
+                const winningSymbol = result[0];
+
+                /*
+                 * The payout includes the returned bet.
+                 */
+
+                const payout =
+                    bet * winningSymbol.multiplier;
+
+                credits += payout;
+
+                reels.forEach(reel => {
+                    reel.classList.add("winner");
+                });
+
+                messageEl.textContent =
+                    `🎉 JACKPOT! Three ${winningSymbol.name} ` +
+                    `symbols! You received ${payout} ` +
+                    "virtual credits!";
+
+            } else {
+
+                messageEl.textContent =
+                    "No matching combination this time. " +
+                    "Try again!";
+
+            }
+
+            updateBalance();
+
+            /*
+             * Restore the selected deity's highlight.
+             */
+
+            if (selectedGod) {
+
+                reels.forEach(reel => {
+
+                    reel.classList.toggle(
+                        "selected",
+                        reel.dataset.symbol === selectedGod
+                    );
+                });
+            }
+
+            if (credits === 0) {
+
+                messageEl.textContent +=
+                    " No virtual credits remain.";
+            }
+
+            spinning = false;
+
+            spinButton.disabled = false;
+            betEl.disabled = false;
+            resetButton.disabled = false;
+        }
+
+        /* ========================================
+           RESET GAME
+        ======================================== */
+
+        function resetGame() {
+
+            if (spinning) {
+                return;
+            }
+
+            credits = INITIAL_CREDITS;
+
+            updateBalance();
+
+            clearHighlights();
+
+            /*
+             * Display fresh random symbols.
+             */
+
+            reels.forEach(reel => {
+
+                displaySymbol(
+                    reel,
+                    randomSymbol()
+                );
+            });
+
+            messageEl.textContent =
+                "Virtual credits reset. Ready to play!";
+        }
+
+        /* ========================================
+           EVENT LISTENERS
+        ======================================== */
+
+        spinButton.addEventListener("click", spin);
+
+        resetButton.addEventListener("click", resetGame);
+
+        /* ========================================
+           INITIALIZE GAME
+        ======================================== */
+
+        updateBalance();
+
+        reels.forEach(reel => {
+
+            displaySymbol(
+                reel,
+                randomSymbol()
+            );
+        });
+
+    </script>
+
+</body>
+
+</html>

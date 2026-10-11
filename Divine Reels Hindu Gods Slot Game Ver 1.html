@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Divine Reels - Hindu Gods Slot Game</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      padding: 20px;
+
+      background:
+        radial-gradient(circle at top, #71391d, #241019 75%);
+
+      color: #fff5dc;
+      font-family: Georgia, "Times New Roman", serif;
+    }
+
+    .game {
+      width: 100%;
+      max-width: 440px;
+      padding: 25px 20px;
+      text-align: center;
+
+      background: linear-gradient(145deg, #63251d, #34121b);
+
+      border: 3px solid #e7b94e;
+      border-radius: 22px;
+
+      box-shadow: 0 12px 35px rgba(0, 0, 0, 0.45);
+    }
+
+    h1 {
+      margin-top: 0;
+      margin-bottom: 8px;
+
+      color: #ffd45c;
+      font-size: clamp(25px, 6vw, 32px);
+    }
+
+    .subtitle {
+      color: #f2d8a3;
+      font-size: 14px;
+      margin-bottom: 20px;
+    }
+
+    .balance {
+      font-size: 19px;
+      margin: 20px 0;
+      color: #ffe9b0;
+    }
+
+    .balance strong {
+      color: #ffd45c;
+    }
+
+    .reels {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      margin: 25px 0;
+      padding: 10px;
+
+      background: #250f12;
+      border: 2px solid #e7b94e;
+      border-radius: 15px;
+    }
+
+    .reel {
+      flex: 1;
+      min-width: 0;
+      height: 115px;
+
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 5px;
+
+      overflow: hidden;
+      padding: 5px;
+
+      background: linear-gradient(#fff4d7, #e8c783);
+      color: #542014;
+
+      border: 2px solid #d6a447;
+      border-radius: 12px;
+
+      transition:
+        background 0.2s,
+        border-color 0.2s;
+    }
+
+    .reel .icon {
+      font-size: clamp(30px, 9vw, 46px);
+      line-height: 1.2;
+    }
+
+    .reel .name {
+      font-family: Arial, sans-serif;
+      font-size: clamp(9px, 2.7vw, 12px);
+      font-weight: bold;
+      line-height: 1.2;
+      overflow-wrap: anywhere;
+    }
+
+    .reel.spinning {
+      animation: shake 0.12s infinite alternate;
+      background: #fff0b8;
+    }
+
+    .reel.winner {
+      border-color: #fff4a3;
+      background: linear-gradient(#fff9db, #ffd45c);
+      box-shadow: 0 0 16px rgba(255, 212, 92, 0.7);
+    }
+
+    @keyframes shake {
+      from {
+        transform: translateY(-3px);
+      }
+
+      to {
+        transform: translateY(3px);
+      }
+    }
+
+    .controls {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 20px;
+    }
+
+    label {
+      color: #ffedc2;
+      font-weight: bold;
+    }
+
+    button,
+    select {
+      min-height: 44px;
+      padding: 12px 16px;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+    }
+
+    select {
+      background: #fff8e8;
+      color: #28140e;
+    }
+
+    button {
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    button:disabled,
+    select:disabled {
+      opacity: 0.55;
+      cursor: not-allowed;
+    }
+
+    #spin {
+      width: 100%;
+      min-height: 55px;
+      padding: 16px;
+
+      background: linear-gradient(#ffe69a, #e7b43f);
+      color: #35140d;
+
+      border: 2px solid #fff0b6;
+      border-radius: 12px;
+
+      font-size: 21px;
+      font-weight: bold;
+      letter-spacing: 1px;
+    }
+
+    #spin:not(:disabled):active {
+      transform: scale(0.98);
+    }
+
+    #message {
+      min-height: 45px;
+      margin: 20px 0 10px;
+
+      color: #ffdf85;
+      font-size: 17px;
+      font-weight: bold;
+      line-height: 1.5;
+    }
+
+    .hint {
+      color: #e9d4b5;
+      font-family: Arial, sans-serif;
+      font-size: 13px;
+      line-height: 1.8;
+    }
+
+    .divider {
+      border: 0;
+      border-top: 1px solid #a66b42;
+      margin: 20px 0;
+    }
+
+    #reset {
+      width: 100%;
+      margin-top: 8px;
+
+      background: #54251f;
+      color: #ffdf9b;
+
+      border: 1px solid #bd8845;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .reel.spinning {
+        animation: none;
+      }
+
+      #spin {
+        transition: none;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <main class="game">
+
+    <h1>🪷 Divine Reels 🪷</h1>
+
+    <div class="subtitle">
+      Hindu Deity-Themed 3-Reel Game
+    </div>
+
+    <div class="balance">
+      Virtual Credits:
+      <strong id="balance">1000</strong>
+    </div>
+
+    <div class="reels" aria-label="Three game reels">
+
+      <div class="reel" id="reel0">
+        <span class="icon">🏹</span>
+        <span class="name">Lord Ram</span>
+      </div>
+
+      <div class="reel" id="reel1">
+        <span class="icon">🙏</span>
+        <span class="name">Lord Hanuman</span>
+      </div>
+
+      <div class="reel" id="reel2">
+        <span class="icon">🪈</span>
+        <span class="name">Lord Krishna</span>
+      </div>
+
+    </div>
+
+    <div class="controls">
+      <label for="bet">Bet:</label>
+
+      <select id="bet">
+        <option value="10">10 credits</option>
+        <option value="25">25 credits</option>
+        <option value="50">50 credits</option>
+        <option value="100">100 credits</option>
+      </select>
+    </div>
+
+    <button id="spin" type="button">
+      SPIN
+    </button>
+
+    <p id="message" aria-live="polite">
+      Welcome! Press SPIN to begin.
+    </p>
+
+    <hr class="divider">
+
+    <div class="hint">
+      <strong>Divine Symbols</strong><br><br>
+
+      🏹 Lord Ram — 2×<br>
+      🙏 Lord Hanuman — 3×<br>
+      🪈 Lord Krishna — 4×<br>
+      🪷 Goddess Lakshmi — 5×<br>
+      🐘 Lord Ganpati — 8×<br>
+      🔱 Lord Shankar — 10×<br><br>
+
+      Match all three symbols to receive the
+      corresponding virtual-credit reward.<br>
+
+      Payouts include the returned bet.
+    </div>
+
+    <button id="reset" type="button">
+      RESET VIRTUAL CREDITS
+    </button>
+
+  </main>
+
+  <script>
+    "use strict";
+
+    // Hindu deity symbols and their reward multipliers.
+    // Weights determine how frequently each symbol appears.
+
+    const symbols = [
+      {
+        id: "ram",
+        name: "Lord Ram",
+        icon: "🏹",
+        multiplier: 2,
+        weight: 25
+      },
+      {
+        id: "hanuman",
+        name: "Lord Hanuman",
+        icon: "🙏",
+        multiplier: 3,
+        weight: 22
+      },
+      {
+        id: "krishna",
+        name: "Lord Krishna",
+        icon: "🪈",
+        multiplier: 4,
+        weight: 19
+      },
+      {
+        id: "lakshmi",
+        name: "Goddess Lakshmi",
+        icon: "🪷",
+        multiplier: 5,
+        weight: 15
+      },
+      {
+        id: "ganpati",
+        name: "Lord Ganpati",
+        icon: "🐘",
+        multiplier: 8,
+        weight: 12
+      },
+      {
+        id: "shankar",
+        name: "Lord Shankar",
+        icon: "🔱",
+        multiplier: 10,
+        weight: 7
+      }
+    ];
+
+    const INITIAL_CREDITS = 1000;
+
+    let credits = INITIAL_CREDITS;
+    let spinning = false;
+
+    const balanceEl =
+      document.getElementById("balance");
+
+    const betEl =
+      document.getElementById("bet");
+
+    const spinButton =
+      document.getElementById("spin");
+
+    const resetButton =
+      document.getElementById("reset");
+
+    const messageEl =
+      document.getElementById("message");
+
+    const reels = [
+      document.getElementById("reel0"),
+      document.getElementById("reel1"),
+      document.getElementById("reel2")
+    ];
+
+    // Update the displayed credit balance.
+    function updateBalance() {
+      balanceEl.textContent = credits;
+    }
+
+    // Select a random symbol using configured weights.
+    function randomSymbol() {
+      const totalWeight = symbols.reduce(
+        (sum, symbol) => sum + symbol.weight,
+        0
+      );
+
+      let roll = Math.random() * totalWeight;
+
+      for (const symbol of symbols) {
+        roll -= symbol.weight;
+
+        if (roll < 0) {
+          return symbol;
+        }
+      }
+
+      return symbols[symbols.length - 1];
+    }
+
+    // Safely display a symbol and its name.
+    function displaySymbol(reel, symbol) {
+      const icon = document.createElement("span");
+      icon.className = "icon";
+      icon.textContent = symbol.icon;
+
+      const name = document.createElement("span");
+      name.className = "name";
+      name.textContent = symbol.name;
+
+      reel.replaceChildren(icon, name);
+    }
+
+    // Remove highlighting from all reels.
+    function clearHighlights() {
+      reels.forEach(reel => {
+        reel.classList.remove("winner");
+      });
+    }
+
+    function sleep(ms) {
+      return new Promise(resolve => setTimeout(resolve, ms));
+    }
+
+    // Main spin function.
+    async function spin() {
+      if (spinning) {
+        return;
+      }
+
+      const bet = Number(betEl.value);
+
+      if (!Number.isInteger(bet) || bet <= 0) {
+        messageEl.textContent = "Invalid bet amount.";
+        return;
+      }
+
+      if (credits < bet) {
+        messageEl.textContent =
+          "Not enough virtual credits! Reset to play again.";
+
+        return;
+      }
+
+      spinning = true;
+
+      spinButton.disabled = true;
+      betEl.disabled = true;
+      resetButton.disabled = true;
+
+      clearHighlights();
+
+      // Deduct the selected virtual bet.
+      credits -= bet;
+      updateBalance();
+
+      messageEl.textContent = "The reels are spinning...";
+
+      // Start animation on all three reels.
+      reels.forEach(reel => {
+        reel.classList.add("spinning");
+      });
+
+      // Generate the final outcome.
+      const result = [
+        randomSymbol(),
+        randomSymbol(),
+        randomSymbol()
+      ];
+
+      // Animate and stop the reels one by one.
+      for (let i = 0; i < reels.length; i++) {
+        const duration = 800 + i * 500;
+        const start = Date.now();
+
+        while (Date.now() - start < duration) {
+          displaySymbol(reels[i], randomSymbol());
+
+          await sleep(80);
+        }
+
+        displaySymbol(reels[i], result[i]);
+
+        reels[i].classList.remove("spinning");
+      }
+
+      // Check whether all three symbols match.
+      const allMatch = result.every(
+        symbol => symbol.id === result[0].id
+      );
+
+      if (allMatch) {
+        const multiplier = result[0].multiplier;
+
+        // Includes the returned bet.
+        const payout = bet * multiplier;
+
+        credits += payout;
+
+        reels.forEach(reel => {
+          reel.classList.add("winner");
+        });
+
+        messageEl.textContent =
+          `🎉 Three ${result[0].name} symbols! ` +
+          `You received ${payout} virtual credits!`;
+      } else {
+        messageEl.textContent =
+          "No matching combination this time. Try again!";
+      }
+
+      updateBalance();
+
+      if (credits < 10) {
+        messageEl.textContent +=
+          " Your balance may be too low for another spin.";
+      }
+
+      spinning = false;
+
+      spinButton.disabled = false;
+      betEl.disabled = false;
+      resetButton.disabled = false;
+    }
+
+    // Reset the game to its initial virtual balance.
+    function resetGame() {
+      if (spinning) {
+        return;
+      }
+
+      credits = INITIAL_CREDITS;
+
+      updateBalance();
+      clearHighlights();
+
+      reels.forEach(reel => {
+        displaySymbol(reel, randomSymbol());
+      });
+
+      messageEl.textContent =
+        "Virtual credits reset. Ready to play!";
+
+      spinButton.disabled = false;
+      betEl.disabled = false;
+    }
+
+    spinButton.addEventListener("click", spin);
+
+    resetButton.addEventListener("click", resetGame);
+
+    // Initialize the game.
+    updateBalance();
+
+    reels.forEach(reel => {
+      displaySymbol(reel, randomSymbol());
+    });
+
+  </script>
+
+</body>
+</html>
+

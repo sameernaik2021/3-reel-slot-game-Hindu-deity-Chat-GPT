@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>3-Reel Slot Game</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      padding: 20px;
+      background: #101525;
+      color: white;
+      font-family: Arial, sans-serif;
+    }
+
+    .game {
+      width: 100%;
+      max-width: 420px;
+      padding: 25px;
+      text-align: center;
+      background: #202a40;
+      border: 2px solid #e7b94e;
+      border-radius: 22px;
+    }
+
+    h1 {
+      margin-top: 0;
+      color: #ffd45c;
+    }
+
+    .balance {
+      font-size: 19px;
+      margin: 20px 0;
+    }
+
+    .reels {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      margin: 25px 0;
+    }
+
+    .reel {
+      width: 95px;
+      height: 100px;
+      display: grid;
+      place-items: center;
+      background: #fff;
+      color: #111;
+      border: 3px solid #e7b94e;
+      border-radius: 12px;
+      font-size: 48px;
+    }
+
+    .reel.spinning {
+      animation: shake 0.12s infinite alternate;
+    }
+
+    @keyframes shake {
+      from { transform: translateY(-3px); }
+      to { transform: translateY(3px); }
+    }
+
+    .controls {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 20px;
+    }
+
+    button, select {
+      padding: 12px 16px;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+    }
+
+    select {
+      background: white;
+      color: #111;
+    }
+
+    button {
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    button:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    #spin {
+      width: 100%;
+      padding: 16px;
+      background: #ffd45c;
+      color: #171717;
+      font-size: 20px;
+    }
+
+    #message {
+      min-height: 30px;
+      margin: 20px 0 10px;
+      font-size: 18px;
+      font-weight: bold;
+    }
+
+    .hint {
+      color: #c6cede;
+      font-size: 13px;
+      line-height: 1.6;
+    }
+  </style>
+</head>
+
+<body>
+  <main class="game">
+    <h1>🎰 Lucky Reels</h1>
+
+    <div class="balance">
+      Credits: <strong id="balance">1000</strong>
+    </div>
+
+    <div class="reels" aria-label="Slot machine reels">
+      <div class="reel" id="reel0">🍒</div>
+      <div class="reel" id="reel1">🍋</div>
+      <div class="reel" id="reel2">🔔</div>
+    </div>
+
+    <div class="controls">
+      <label for="bet">Bet:</label>
+      <select id="bet">
+        <option value="10">10 credits</option>
+        <option value="25">25 credits</option>
+        <option value="50">50 credits</option>
+        <option value="100">100 credits</option>
+      </select>
+    </div>
+
+    <button id="spin">SPIN</button>
+
+    <p id="message" aria-live="polite">
+      Good luck!
+    </p>
+
+    <p class="hint">
+      Match three symbols to win.<br>
+      🍒 = 2× &nbsp; 🍋 = 3×<br>
+      🔔 = 5× &nbsp; 💎 = 10× &nbsp; 7️⃣ = 20×<br>
+      Payouts include the returned bet.
+    </p>
+  </main>
+
+  <script>
+    const symbols = [
+      { icon: "🍒", multiplier: 2, weight: 35 },
+      { icon: "🍋", multiplier: 3, weight: 28 },
+      { icon: "🔔", multiplier: 5, weight: 20 },
+      { icon: "💎", multiplier: 10, weight: 12 },
+      { icon: "7️⃣", multiplier: 20, weight: 5 }
+    ];
+
+    let credits = 1000;
+    let spinning = false;
+
+    const balanceEl = document.getElementById("balance");
+    const betEl = document.getElementById("bet");
+    const spinButton = document.getElementById("spin");
+    const messageEl = document.getElementById("message");
+
+    const reels = [
+      document.getElementById("reel0"),
+      document.getElementById("reel1"),
+      document.getElementById("reel2")
+    ];
+
+    function updateBalance() {
+      balanceEl.textContent = credits;
+    }
+
+    // Select a symbol using its configured weight.
+    function randomSymbol() {
+      const totalWeight = symbols.reduce(
+        (sum, symbol) => sum + symbol.weight, 0
+      );
+
+      let roll = Math.random() * totalWeight;
+
+      for (const symbol of symbols) {
+        roll -= symbol.weight;
+
+        if (roll < 0) {
+          return symbol;
+        }
+      }
+
+      return symbols[0];
+    }
+
+    function sleep(ms) {
+      return new Promise(resolve => setTimeout(resolve, ms));
+    }
+
+    async function spin() {
+      if (spinning) return;
+
+      const bet = Number(betEl.value);
+
+      if (!Number.isInteger(bet) || bet <= 0) {
+        messageEl.textContent = "Invalid bet.";
+        return;
+      }
+
+      if (credits < bet) {
+        messageEl.textContent = "Not enough credits!";
+        return;
+      }
+
+      spinning = true;
+      spinButton.disabled = true;
+      betEl.disabled = true;
+
+      credits -= bet;
+      updateBalance();
+
+      messageEl.textContent = "Spinning...";
+
+      reels.forEach(reel => reel.classList.add("spinning"));
+
+      // Determine the final result before displaying it.
+      const result = [
+        randomSymbol(),
+        randomSymbol(),
+        randomSymbol()
+      ];
+
+      // Animate and stop each reel in sequence.
+      for (let i = 0; i < reels.length; i++) {
+        const duration = 800 + i * 500;
+        const start = Date.now();
+
+        while (Date.now() - start < duration) {
+          reels[i].textContent = randomSymbol().icon;
+          await sleep(80);
+        }
+
+        reels[i].textContent = result[i].icon;
+        reels[i].classList.remove("spinning");
+      }
+
+      const allMatch = result.every(
+        symbol => symbol.icon === result[0].icon
+      );
+
+      if (allMatch) {
+        const multiplier = result[0].multiplier;
+        const payout = bet * multiplier;
+
+        credits += payout;
+        messageEl.textContent =
+          `🎉 JACKPOT! You won ${payout} credits!`;
+      } else {
+        messageEl.textContent =
+          "No win this time. Try again!";
+      }
+
+      updateBalance();
+
+      if (credits === 0) {
+        messageEl.textContent += " No credits left to play.";
+      }
+
+      spinning = false;
+      spinButton.disabled = false;
+      betEl.disabled = false;
+    }
+
+    spinButton.addEventListener("click", spin);
+  </script>
+</body>
+</html>
+
